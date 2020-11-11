@@ -45,7 +45,7 @@ xsv join 1 methods.csv 1 results.csv  > joined.csv   # for input to spreadsheet
 
 You can also supply a config file to the plugin in the SBT build:
 
-```
+``` scala
 scalacOptions += "-P:instrumenter:hello/instrument.yml"
 ```
 
@@ -55,6 +55,9 @@ The config file has the following format:
 methodsCSV: hello/methods.csv
 resultsCSV: hello/results.csv
 ```
+
+Please check the configuration for the subproject `hello` in
+[build.sbt](build.sbt) for more detail.
 
 ## Development
 
