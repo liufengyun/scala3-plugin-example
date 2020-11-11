@@ -1,6 +1,5 @@
 object Hello {
   def main(args: Array[String]): Unit = {
-    def warmup = (0 to 1000).foreach(foo)
     foo(5)
   }
 

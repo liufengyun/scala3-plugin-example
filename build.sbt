@@ -31,9 +31,10 @@ lazy val hello = project
     version := "0.1.0",
     scalaVersion := dottyVersion,
 
+    scalacOptions += "-P:instrumenter:hello/instrument.yml",
+
     libraryDependencies += "xmid.org" %% "scala-instrumentation-runtime" % "0.1.0",
     libraryDependencies += compilerPlugin("xmid.org" %% "scala-instrumentation-plugin" % "0.1.0")
-    // scalacOptions += "-P:instrumentation:path/to/config"
   )
 
 
