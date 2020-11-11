@@ -7,11 +7,12 @@ lazy val plugin = project
 
     scalaVersion := dottyVersion,
 
+    libraryDependencies += "ch.epfl.lamp" %% "dotty-compiler" % dottyVersion % "provided",
     libraryDependencies += "org.scalameta" %% "munit" % "0.7.15" % Test,
     testFrameworks += new TestFramework("munit.Framework")
   )
 
-lazy val lib = project
+lazy val runtime = project
   .settings(
     name := "scala-instrumentation-runtime",
     version := "0.1.0",
@@ -23,6 +24,4 @@ lazy val lib = project
   )
 
 lazy val root = project
-  .aggregate(plugin, lib)
-  .dependsOn(plugin)
-  .dependsOn(lib)
+  .aggregate(plugin, runtime)
