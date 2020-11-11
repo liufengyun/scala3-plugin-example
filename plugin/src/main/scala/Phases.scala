@@ -5,6 +5,6 @@ import core._
 import Contexts.Context
 import plugins._
 
-class InstrumentPhase extends PluginPhase {
+class InstrumentPhase(setting: Setting) extends PluginPhase {
   val phaseName = "instrumentPhase"
 }
