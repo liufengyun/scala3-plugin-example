@@ -1,12 +1,12 @@
 package scala.instrumentation
 
-object Runtime {
-  private[this] var accumulated: Array[Long] = null
-  private[this] var count: Array[Long] = null
-  private[this] var recursionDepth: Array[Long] = null
-  private[this] var callStack = new Array[Int](4096)
-  private[this] var subCalls = new Array[Long](4096)
-  private[this] var stackPointer: Int = -1
+object Counter extends Tracer {
+  private var accumulated: Array[Long] = null
+  private var count: Array[Long] = null
+  private var recursionDepth: Array[Long] = null
+  private var callStack = new Array[Int](4096)
+  private var subCalls = new Array[Long](4096)
+  private var stackPointer: Int = -1
 
   def init(num: Int) = {
     accumulated = new Array(num)
@@ -40,8 +40,8 @@ object Runtime {
     if stackPointer >= 0 then
       subCalls(stackPointer) += subCallNum
 
-  def dump(path: String) = {
-    val file = new java.io.File(path)
+  def finish(outputFile: String) = {
+    val file = new java.io.File(outputFile)
     val bw = new java.io.BufferedWriter(new java.io.FileWriter(file))
     (0 until count.size).foreach { id =>
       bw.write(id.toString + ", " + count(id) + ", " + accumulated(id) + "\n")

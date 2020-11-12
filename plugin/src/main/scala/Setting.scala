@@ -48,8 +48,10 @@ class Setting(configFile: Option[String]) {
 
   def runtimeOutputFile: String = config.resultsCSV
 
+  def runtimeObject: String = config.runtimeObject
+
   private def readConfig(): Config = {
-    val default = Config(methodsCSV = "methods.csv", resultsCSV = "results.csv")
+    val default = Config(methodsCSV = "methods.csv", resultsCSV = "results.csv", runtimeObject = "scala.instrumentation.Counter")
 
     configFile.map { file =>
       import scala.io.Source
@@ -61,8 +63,9 @@ class Setting(configFile: Option[String]) {
           val parts = line.split(':')
           assert(parts.size == 2, "incorrect config file " + file + ", line = " + line)
           parts(0) match
-            case "methodsCSV"   => config.copy(methodsCSV = parts(1).trim())
-            case "resultsCSV"   => config.copy(resultsCSV = parts(1).trim())
+            case "methodsCSV"      => config.copy(methodsCSV = parts(1).trim())
+            case "resultsCSV"      => config.copy(resultsCSV = parts(1).trim())
+            case "runtimeObject"   => config.copy(runtimeObject = parts(1).trim())
         }
       }
       bufferedSource.close()
@@ -71,7 +74,7 @@ class Setting(configFile: Option[String]) {
     }.getOrElse(default)
   }
 
-  private case class Config(methodsCSV: String, resultsCSV: String)
+  private case class Config(methodsCSV: String, resultsCSV: String, runtimeObject: String)
 
   def instrumentable(ddef: tpd.DefDef)(using Context) =
     val meth = ddef.symbol

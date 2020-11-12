@@ -33,7 +33,7 @@ class InstrumentStart(setting: Setting) extends PluginPhase {
   override val runsBefore = Set("instrumentFinish")
 
   override def prepareForUnit(tree: Tree)(using Context): Context =
-    val runtime = requiredModule("scala.instrumentation.Runtime")
+    val runtime = requiredModule(setting.runtimeObject)
     enterSym = runtime.requiredMethod("enter")
     exitSym = runtime.requiredMethod("exit")
     truncateSym = runtime.requiredMethod("truncate")
@@ -113,7 +113,7 @@ class InstrumentFinish(setting: Setting) extends PluginPhase { thisPhase =>
   override val runsBefore = Set("erasure")
 
   private var initSym: Symbol = _
-  private var dumpSym: Symbol = _
+  private var finishSym: Symbol = _
   private var dumped: Boolean = false
 
   override def prepareForUnit(tree: Tree)(using Context): Context =
@@ -121,17 +121,17 @@ class InstrumentFinish(setting: Setting) extends PluginPhase { thisPhase =>
       dumped = true
       setting.writeMethods()
 
-    val runtime = requiredModule("scala.instrumentation.Runtime")
+    val runtime = requiredModule(setting.runtimeObject)
     initSym = runtime.requiredMethod("init")
-    dumpSym = runtime.requiredMethod("dump")
+    finishSym = runtime.requiredMethod("finish")
     ctx
 
   override def transformDefDef(tree: DefDef)(using Context): Tree =
     if ctx.platform.isMainMethod(tree.symbol) then
       val size = setting.nextId()
       val initTree = ref(initSym).appliedTo(Literal(Constant(size)))
-      val dumpTree = ref(dumpSym).appliedTo(Literal(Constant(setting.runtimeOutputFile)))
-      val rhs1 = Block(initTree :: tree.rhs :: Nil, dumpTree)
+      val finishTree = ref(finishSym).appliedTo(Literal(Constant(setting.runtimeOutputFile)))
+      val rhs1 = Block(initTree :: tree.rhs :: Nil, finishTree)
       cpy.DefDef(tree)(rhs = rhs1)
     else tree
 }
