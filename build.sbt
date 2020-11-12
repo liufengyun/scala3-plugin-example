@@ -3,7 +3,7 @@ val dottyVersion = "0.27.0-RC1"
 lazy val plugin = project
   .settings(
     name := "scala-instrumentation-plugin",
-    organization := "xmid.org",
+    organization := "ch.epfl.scala",
     version := "0.1.0",
 
     scalaVersion := dottyVersion,
@@ -16,7 +16,7 @@ lazy val plugin = project
 lazy val runtime = project
   .settings(
     name := "scala-instrumentation-runtime",
-    organization := "xmid.org",
+    organization := "ch.epfl.scala",
     version := "0.1.0",
 
     scalaVersion := dottyVersion,
@@ -33,8 +33,8 @@ lazy val hello = project
 
     scalacOptions += "-P:instrumenter:hello/instrument.yml",
 
-    libraryDependencies += "xmid.org" %% "scala-instrumentation-runtime" % "0.1.0",
-    libraryDependencies += compilerPlugin("xmid.org" %% "scala-instrumentation-plugin" % "0.1.0")
+    libraryDependencies += "ch.epfl.scala" %% "scala-instrumentation-runtime" % "0.1.0",
+    libraryDependencies += compilerPlugin("ch.epfl.scala" %% "scala-instrumentation-plugin" % "0.1.0")
   )
 
 
