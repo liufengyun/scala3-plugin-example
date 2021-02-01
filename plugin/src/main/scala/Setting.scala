@@ -1,4 +1,4 @@
-package scala.instrumentation
+package counter
 
 import scala.language.implicitConversions
 
@@ -19,13 +19,15 @@ class Setting(configFile: Option[String]) {
 
   private[this] var config: Config = readConfig()
 
-  def nextId(): Int =
+  private def nextId(): Int =
     methodId += 1
     methodId
 
   def add(meth: tpd.DefDef): Int =
     methods.append(meth)
     nextId()
+
+  def methodCount: Int = methods.size
 
   def writeMethods()(using Context) = {
     val file = new java.io.File(config.methodsCSV)
@@ -48,10 +50,10 @@ class Setting(configFile: Option[String]) {
 
   def runtimeOutputFile: String = config.resultsCSV
 
-  def runtimeObject: String = config.runtimeObject
+  def runtimeObject: String = "counter.Counter"
 
   private def readConfig(): Config = {
-    val default = Config(methodsCSV = "methods.csv", resultsCSV = "results.csv", runtimeObject = "scala.instrumentation.Counter")
+    val default = Config(methodsCSV = "methods.csv", resultsCSV = "results.csv")
 
     configFile.map { file =>
       import scala.io.Source
@@ -65,7 +67,6 @@ class Setting(configFile: Option[String]) {
           parts(0) match
             case "methodsCSV"      => config.copy(methodsCSV = parts(1).trim())
             case "resultsCSV"      => config.copy(resultsCSV = parts(1).trim())
-            case "runtimeObject"   => config.copy(runtimeObject = parts(1).trim())
         }
       }
       bufferedSource.close()
@@ -74,12 +75,5 @@ class Setting(configFile: Option[String]) {
     }.getOrElse(default)
   }
 
-  private case class Config(methodsCSV: String, resultsCSV: String, runtimeObject: String)
-
-  def instrumentable(ddef: tpd.DefDef)(using Context) =
-    val meth = ddef.symbol
-    !ddef.rhs.isEmpty
-    && !meth.isOneOf(Synthetic | Deferred | Private | Accessor)
-    && (meth.owner.isTopLevelClass || meth.owner.isStaticOwner)
-    || ctx.platform.isMainMethod(meth) // always instrument main
+  private case class Config(methodsCSV: String, resultsCSV: String)
 }

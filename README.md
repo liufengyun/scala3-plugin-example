@@ -1,6 +1,6 @@
-# Scala 3 Instrumentation
+# Scala 3 Compiler Plugin Example
 
-A Scala 3 compiler plugin for instrumentation.
+A Scala 3 compiler plugin to count the most frequently called methods in a program.
 
 ## Usage
 
@@ -13,9 +13,9 @@ sbt > plugin/publishLocal
 Then enable the plugin in your SBT build:
 
 ``` scala
-libraryDependencies += "xmid.org" %% "scala-instrumentation-runtime" % "0.1.0",
+libraryDependencies += "org.mycompany" %% "scala-counter-runtime" % "0.1.0",
 
-libraryDependencies += compilerPlugin("xmid.org" %% "scala-instrumentation-plugin" % "0.1.0")
+libraryDependencies += compilerPlugin("org.mycompany" %% "scala-counter-plugin" % "0.1.0")
 ```
 
 Now compile your program, a file named `methods.csv` will be generated:
@@ -46,7 +46,7 @@ xsv join 1 methods.csv 1 results.csv  > joined.csv   # for input to spreadsheet
 You can also supply a config file to the plugin in the SBT build:
 
 ``` scala
-scalacOptions += "-P:instrumenter:hello/instrument.yml"
+scalacOptions += "-P:counter:hello/counter.yml"
 ```
 
 The config file has the following format:
@@ -64,7 +64,7 @@ Please check the configuration for the subproject `hello` in
 First, publish the plugin locally:
 
 ```
-sbt > plugin/publishLocal
+sbt > counter/publishLocal
 ```
 
 Run test
@@ -78,7 +78,7 @@ Check the files under `hello`:
 ```
 hello/
 ├── Hello.scala
-├── instrument.yml
+├── counter.yml
 ├── methods.csv
 ├── results.csv
 ```

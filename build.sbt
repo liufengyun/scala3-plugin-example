@@ -1,29 +1,37 @@
-val dottyVersion = "0.27.0-RC1"
+val dottyVersion = "3.0.0-M3"
+val libVersion = "0.1.0"
+val org = "org.mycompany"
 
 lazy val plugin = project
   .settings(
-    name := "scala-instrumentation-plugin",
-    organization := "ch.epfl.scala",
-    version := "0.1.0",
+    name := "scala-counter-plugin",
+    organization := org,
+    version := libVersion,
 
     scalaVersion := dottyVersion,
 
-    libraryDependencies += "ch.epfl.lamp" %% "dotty-compiler" % dottyVersion % "provided",
-    libraryDependencies += "org.scalameta" %% "munit" % "0.7.15" % Test,
-    testFrameworks += new TestFramework("munit.Framework")
+    libraryDependencies += "org.scala-lang" %% "scala3-compiler" % dottyVersion % "provided"
   )
 
 lazy val runtime = project
   .settings(
-    name := "scala-instrumentation-runtime",
-    organization := "ch.epfl.scala",
-    version := "0.1.0",
+    name := "scala-counter-runtime",
+    organization := "org.mycompany",
+    version := libVersion,
+
+    scalaVersion := dottyVersion
+  )
+
+lazy val counter = project
+  .aggregate(plugin, runtime)
+  .settings(
+    name := "scala-counter",
+    organization := org,
+    version := libVersion,
 
     scalaVersion := dottyVersion,
-
-    libraryDependencies += "org.scalameta" %% "munit" % "0.7.15" % Test,
-    testFrameworks += new TestFramework("munit.Framework")
   )
+
 
 lazy val hello = project
   .settings(
@@ -31,10 +39,10 @@ lazy val hello = project
     version := "0.1.0",
     scalaVersion := dottyVersion,
 
-    scalacOptions += "-P:instrumenter:hello/instrument.yml",
+    scalacOptions += "-P:counter:hello/counter.yml",
 
-    libraryDependencies += "ch.epfl.scala" %% "scala-instrumentation-runtime" % "0.1.0",
-    libraryDependencies += compilerPlugin("ch.epfl.scala" %% "scala-instrumentation-plugin" % "0.1.0")
+    libraryDependencies += "org.mycompany" %% "scala-counter-runtime" % "0.1.0",
+    libraryDependencies += compilerPlugin("org.mycompany" %% "scala-counter-plugin" % "0.1.0")
   )
 
 
