@@ -45,13 +45,7 @@ class InstrumentStart(setting: Setting) extends PluginPhase {
     val methId = setting.add(tree)
     val enterTree = ref(enterSym).appliedTo(Literal(Constant(methId)))
 
-    val rhs1 = tree.rhs match {
-      case rhs @ Block(stats, expr) =>
-        cpy.Block(rhs)((enterTree :: stats) , expr)
-
-      case rhs =>
-        tpd.Block(enterTree :: Nil, rhs)
-    }
+    val rhs1 = tpd.Block(enterTree :: Nil, tree.rhs)
 
     cpy.DefDef(tree)(rhs = rhs1)
   }
@@ -60,7 +54,7 @@ class InstrumentStart(setting: Setting) extends PluginPhase {
 class InstrumentFinish(setting: Setting) extends PluginPhase { thisPhase =>
   import tpd._
 
-  override def phaseName: String = "instrumentFinish"
+  val phaseName: String = "instrumentFinish"
 
   override val runsAfter = Set("instrumentStart")
   override val runsBefore = Set("erasure")
