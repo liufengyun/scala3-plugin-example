@@ -14,25 +14,20 @@ import ast.Trees._
 import ast.tpd
 
 class Setting(configFile: Option[String]) {
-  private[this] var methodId = -1
   private[this] val methods = new scala.collection.mutable.ArrayBuffer[tpd.DefDef](256)
 
   private[this] var config: Config = readConfig()
 
-  private def nextId(): Int =
-    methodId += 1
-    methodId
-
   def add(meth: tpd.DefDef): Int =
     methods.append(meth)
-    nextId()
+    methods.size
 
   def methodCount: Int = methods.size
 
   def writeMethods()(using Context) = {
     val file = new java.io.File(config.methodsCSV)
     val bw = new java.io.BufferedWriter(new java.io.FileWriter(file))
-    (0 to methodId).foreach { id =>
+    (0 to methods.size).foreach { id =>
       val methTree = methods(id)
       val meth = methTree.symbol
       // id, method, enclosing class, top-level class path, line number
