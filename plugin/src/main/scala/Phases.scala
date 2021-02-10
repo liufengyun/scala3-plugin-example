@@ -20,15 +20,15 @@ import Constants.Constant
 import scala.language.implicitConversions
 
 
-class InstrumentStart(setting: Setting) extends PluginPhase {
+class PhaseA(setting: Setting) extends PluginPhase {
   import tpd._
 
-  val phaseName = "instrumentStart"
+  val phaseName = "PhaseA"
 
   private var enterSym: Symbol = _
 
   override val runsAfter = Set("pickler")
-  override val runsBefore = Set("instrumentFinish")
+  override val runsBefore = Set("PhaseB")
 
   override def prepareForUnit(tree: Tree)(using Context): Context =
     val runtime = requiredModule(setting.runtimeObject)
@@ -51,12 +51,12 @@ class InstrumentStart(setting: Setting) extends PluginPhase {
   }
 }
 
-class InstrumentFinish(setting: Setting) extends PluginPhase { thisPhase =>
+class PhaseB(setting: Setting) extends PluginPhase {
   import tpd._
 
-  val phaseName: String = "instrumentFinish"
+  val phaseName: String = "PhaseB"
 
-  override val runsAfter = Set("instrumentStart")
+  override val runsAfter = Set("PhaseA")
   override val runsBefore = Set("erasure")
 
   private var initSym: Symbol = _

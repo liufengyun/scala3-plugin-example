@@ -7,6 +7,6 @@ class Plugin extends StandardPlugin {
   override val description: String = "Count method calls"
 
   def init(options: List[String]): List[PluginPhase] =
-    val setting = new Setting(if options.isEmpty then None else Some(options(0)))
-    (new InstrumentStart(setting)) :: (new InstrumentFinish(setting)) :: Nil
+    val setting = new Setting(options.headOption)
+    (new PhaseA(setting)) :: (new PhaseB(setting)) :: Nil
 }
