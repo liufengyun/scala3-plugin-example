@@ -20,14 +20,14 @@ class Setting(configFile: Option[String]) {
 
   def add(meth: tpd.DefDef): Int =
     methods.append(meth)
-    methods.size
+    methods.size - 1
 
   def methodCount: Int = methods.size
 
   def writeMethods()(using Context) = {
     val file = new java.io.File(config.methodsCSV)
     val bw = new java.io.BufferedWriter(new java.io.FileWriter(file))
-    (0 to methods.size).foreach { id =>
+    (0 until methods.size).foreach { id =>
       val methTree = methods(id)
       val meth = methTree.symbol
       // id, method, enclosing class, top-level class path, line number
