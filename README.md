@@ -30,17 +30,17 @@ Now compile your program, a file named `methods.csv` will be generated:
 Run your program with some sample input, a file named `results.csv` will be generated:
 
 ``` bash
-# id, calls, accumulated calls
-0, 1, 8
-1, 6, 7
-2, 1, 1
+# id, calls
+0, 1
+1, 6
+2, 1
 ```
 
 You can use standard tools like [xsv](https://github.com/BurntSushi/xsv) to join the two files:
 
 ``` bash
-xsv join 1 methods.csv 1 results.csv  | xsv table    # pretty print
-xsv join 1 methods.csv 1 results.csv  > joined.csv   # for input to spreadsheet
+xsv join 1 hello/methods.csv 1 hello/results.csv  | xsv table    # pretty print
+xsv join 1 hello/methods.csv 1 hello/results.csv  > joined.csv   # for input to spreadsheet
 ```
 
 You can also supply a config file to the plugin in the SBT build:

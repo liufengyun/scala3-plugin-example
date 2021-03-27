@@ -27,7 +27,7 @@ class PhaseA(setting: Setting) extends PluginPhase {
 
   private var enterSym: Symbol = _
 
-  override val runsAfter = Set("pickler")
+  override val runsAfter = Set(transform.Pickler.name)
   override val runsBefore = Set("PhaseB")
 
   override def prepareForUnit(tree: Tree)(using Context): Context =
@@ -57,7 +57,7 @@ class PhaseB(setting: Setting) extends PluginPhase {
   val phaseName: String = "PhaseB"
 
   override val runsAfter = Set("PhaseA")
-  override val runsBefore = Set("erasure")
+  override val runsBefore = Set(transform.Erasure.name)
 
   private var initSym: Symbol = _
   private var dumpSym: Symbol = _
