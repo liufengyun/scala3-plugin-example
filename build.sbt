@@ -1,4 +1,4 @@
-val dottyVersion = "3.0.0-M3"
+val dottyVersion = "3.0.0"
 val libVersion = "0.1.0"
 val org = "org.mycompany"
 
