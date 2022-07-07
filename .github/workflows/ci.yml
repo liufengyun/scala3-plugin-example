@@ -1,0 +1,27 @@
+name: test
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - java: 17
+            os: ubuntu-latest
+    runs-on: ${{matrix.os}}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: coursier/cache-action@v6
+    - uses: actions/setup-java@v2
+      with:
+        distribution: temurin
+        java-version: ${{matrix.java}}
+    - name: test
+      run: |
+        sbt counter/publishLocal hello/run
+        cat hello/methods.csv
+        cat hello/results.csv
