@@ -1,4 +1,5 @@
-val dottyVersion = "3.1.3"
+ThisBuild / scalaVersion := "3.1.3"
+
 val libVersion = "0.1.0"
 val org = "org.mycompany"
 
@@ -8,18 +9,14 @@ lazy val plugin = project
     organization := org,
     version := libVersion,
 
-    scalaVersion := dottyVersion,
-
-    libraryDependencies += "org.scala-lang" %% "scala3-compiler" % dottyVersion % "provided"
+    libraryDependencies += "org.scala-lang" %% "scala3-compiler" % scalaVersion.value % "provided"
   )
 
 lazy val runtime = project
   .settings(
     name := "scala-counter-runtime",
     organization := "org.mycompany",
-    version := libVersion,
-
-    scalaVersion := dottyVersion
+    version := libVersion
   )
 
 lazy val counter = project
@@ -27,9 +24,7 @@ lazy val counter = project
   .settings(
     name := "scala-counter",
     organization := org,
-    version := libVersion,
-
-    scalaVersion := dottyVersion,
+    version := libVersion
   )
 
 
@@ -37,7 +32,6 @@ lazy val hello = project
   .settings(
     name := "hello",
     version := "0.1.0",
-    scalaVersion := dottyVersion,
 
     scalacOptions += "-P:counter:hello/counter.yml",
 
